@@ -93,6 +93,7 @@ const SignUp = () => {
         confirmPassword: formData.confirmPassword, 
       };
 
+      // Sending data to the backend for sign up
       const response = await axios.post("http://localhost:5000/api/auth/signup", credentials, {
         headers: { "Content-Type": "application/json" },
       });
@@ -100,8 +101,8 @@ const SignUp = () => {
       setLoading(false);
 
       if (response.status === 201) {
-        setModal({ open: true, type: "success", message: "Account created successfully!" });
-        setTimeout(() => navigate("/login"), 2000);
+        setModal({ open: true, type: "success", message: "Account created successfully! Please check your email for verification." });
+        setTimeout(() => navigate("/login"), 2000); // Redirect to login page after 2 seconds
       }
     } catch (error) {
       setLoading(false);
