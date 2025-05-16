@@ -1,6 +1,6 @@
 // src/router/authRoutes.js
 const express = require('express');
-const { signup, login } = require('../controller/authController');
+const { signup, login, verifyEmail } = require('../controller/authController'); // Add verifyEmail
 const { signupValidator, loginValidator } = require('../validators/userValidator');
 
 const router = express.Router();
@@ -14,6 +14,7 @@ router.post('/signup', (req, res, next) => {
   next();
 }, signup);
 
+// Login Route
 router.post('/login', (req, res, next) => {
   const { error } = loginValidator(req.body);
   if (error) {
@@ -21,5 +22,8 @@ router.post('/login', (req, res, next) => {
   }
   next();
 }, login);
+
+// Email Verification Route
+router.get('/verify-email', verifyEmail); // New route for email verification
 
 module.exports = router;

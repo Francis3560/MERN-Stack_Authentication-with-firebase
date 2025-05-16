@@ -2,6 +2,8 @@
 const bcrypt = require('bcryptjs');
 const { findUserByEmail, createUser } = require('../repository/userRepository');
 const { generateToken } = require('../utils/tokenUtils');
+const { sendConfirmationEmail } = require('../utils/nodemailer'); // Import sendConfirmationEmail
+const jwt = require('jsonwebtoken');
 
 // Sign-up service logic
 const signupService = async ({ full_name, username, email, phone_number, password }) => {
@@ -22,6 +24,16 @@ const signupService = async ({ full_name, username, email, phone_number, passwor
     phone_number,
     password: hashedPassword,
   });
+
+  // Generate email verification token
+  const verificationToken = jwt.sign(
+    { email: newUser.email },
+    process.env.JWT_SECRET, // Ensure you have your JWT_SECRET set up in your .env
+    { expiresIn: '1h' } // Token expires in 1 hour
+  );
+
+  // Send confirmation email with the verification token
+  await sendConfirmationEmail(newUser.email, verificationToken);
 
   return newUser;
 };
